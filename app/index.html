@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arunika Cover — editor cover senja</title>
+<meta name="description" content="Ubah foto dan caption menjadi cover bergaya poster senja: multi-panel, huruf tebal, grade oranye-magenta, ekspor PNG. Semua diproses offline di browser.">
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<header class="masthead">
+  <h1 class="brand">Arunika Cover</h1>
+  <p class="tagline">Foto dan caption jadi cover poster senja — multi-panel, huruf tebal, grade oranye-magenta. Semua diproses offline di browser.</p>
+</header>
+
+<main class="app">
+  <aside class="controls" aria-label="Kontrol editor">
+    <section class="panel">
+      <h2>Foto</h2>
+      <label id="dropZone" class="drop-zone" for="photoInput">
+        <input id="photoInput" class="sr-only" type="file" accept="image/*" multiple>
+        <strong>Tarik foto ke sini</strong>
+        <span>atau klik untuk memilih — JPG, PNG, WebP</span>
+      </label>
+      <div id="photoList" class="photo-list" aria-label="Foto yang dimuat"></div>
+      <div id="sampleRow" class="chip-row" role="group" aria-label="Foto contoh">
+        <button type="button" class="chip" data-sample="pier">Pier</button>
+        <button type="button" class="chip" data-sample="boulevard">Boulevard</button>
+      </div>
+      <p class="hint">Klik thumbnail untuk memasangnya ke panel aktif.</p>
+    </section>
+
+    <section class="panel">
+      <h2>Layout</h2>
+      <div id="layoutPicker" class="chip-row" role="group" aria-label="Layout panel">
+        <button type="button" class="chip" data-layout="hero-strip">Hero + strip</button>
+        <button type="button" class="chip" data-layout="grid">Grid</button>
+        <button type="button" class="chip" data-layout="comic">Komik</button>
+        <button type="button" class="chip" data-layout="hero">Hero penuh</button>
+        <button type="button" class="chip" data-layout="miring">Miring</button>
+      </div>
+      <p class="hint">Ganti layout akan menyusun ulang panel; foto tetap tersimpan urutannya.</p>
+    </section>
+
+    <section class="panel">
+      <h2>Ukuran</h2>
+      <div id="sizePicker" class="chip-row" role="group" aria-label="Ukuran kanvas">
+        <button type="button" class="chip" data-size="wide">16:9 · 1920 × 1080</button>
+        <button type="button" class="chip" data-size="square">1:1 · 1080 × 1080</button>
+        <button type="button" class="chip" data-size="portrait">4:5 · 1080 × 1350</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Grade</h2>
+      <div id="gradePicker" class="chip-row" role="group" aria-label="Grade warna">
+        <button type="button" class="chip" data-grade="sunset">Sunset</button>
+      </div>
+      <div class="field">
+        <div class="field-head">
+          <label for="gradeStrength">Kekuatan grade</label>
+          <span class="readout" id="gradeStrengthOut">100%</span>
+        </div>
+        <input id="gradeStrength" type="range" min="0" max="100" step="1" value="100">
+      </div>
+      <div class="field">
+        <div class="field-head">
+          <label for="contrastRange">Kontras</label>
+          <span class="readout" id="contrastRangeOut">0</span>
+        </div>
+        <input id="contrastRange" type="range" min="-100" max="100" step="1" value="0">
+      </div>
+      <div class="field">
+        <div class="field-head">
+          <label for="saturationRange">Saturasi</label>
+          <span class="readout" id="saturationRangeOut">0</span>
+        </div>
+        <input id="saturationRange" type="range" min="-100" max="100" step="1" value="0">
+      </div>
+      <div class="field">
+        <div class="field-head">
+          <label for="warmthRange">Kehangatan</label>
+          <span class="readout" id="warmthRangeOut">0</span>
+        </div>
+        <input id="warmthRange" type="range" min="-100" max="100" step="1" value="0">
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Caption</h2>
+      <div class="field">
+        <label for="titleInput">Judul</label>
+        <input id="titleInput" type="text" maxlength="40" value="SUNSET HEIST" autocomplete="off" spellcheck="false">
+      </div>
+      <div class="field">
+        <label for="subtitleInput">Subjudul</label>
+        <input id="subtitleInput" type="text" maxlength="40" value="KOTA ARUNIKA" autocomplete="off" spellcheck="false">
+      </div>
+      <div class="field">
+        <label for="taglineInput">Tagline</label>
+        <input id="taglineInput" type="text" maxlength="60" value="Kota ini milik siapa yang berani." autocomplete="off" spellcheck="false">
+      </div>
+      <div class="field">
+        <div class="field-head">
+          <label for="captionSizeRange">Ukuran huruf</label>
+          <span class="readout" id="captionSizeRangeOut">11%</span>
+        </div>
+        <input id="captionSizeRange" type="range" min="5" max="20" step="0.5" value="11">
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <div class="field-head">
+            <label for="captionXRange">Posisi X</label>
+            <span class="readout" id="captionXRangeOut">50%</span>
+          </div>
+          <input id="captionXRange" type="range" min="0" max="100" step="1" value="50">
+        </div>
+        <div class="field">
+          <div class="field-head">
+            <label for="captionYRange">Posisi Y</label>
+            <span class="readout" id="captionYRangeOut">47%</span>
+          </div>
+          <input id="captionYRange" type="range" min="0" max="100" step="1" value="47">
+        </div>
+      </div>
+      <button id="captionYAuto" class="chip chip-auto" type="button" aria-pressed="true" title="Posisi Y dikurung di dalam panel hero">Auto: jaga di area hero</button>
+      <div class="field">
+        <label for="captionAlign">Perataan</label>
+        <select id="captionAlign">
+          <option value="left">Kiri</option>
+          <option value="center" selected>Tengah</option>
+          <option value="right">Kanan</option>
+        </select>
+      </div>
+      <div class="field">
+        <div class="field-head">
+          <label for="captionOutline">Garis tepi</label>
+          <span class="readout" id="captionOutlineOut">8px</span>
+        </div>
+        <input id="captionOutline" type="range" min="0" max="16" step="1" value="8">
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <div class="field-head">
+            <label for="captionSpacingRange">Jarak huruf</label>
+            <span class="readout" id="captionSpacingRangeOut">2%</span>
+          </div>
+          <input id="captionSpacingRange" type="range" min="0" max="10" step="0.5" value="2">
+        </div>
+        <label class="toggle">
+          <input id="captionShadow" type="checkbox" checked>
+          <span>Bayangan</span>
+        </label>
+      </div>
+      <div class="field">
+        <label for="billingInput">Billing block</label>
+        <input id="billingInput" type="text" maxlength="40" value="ARUNIKA PICTURES" autocomplete="off" spellcheck="false">
+      </div>
+      <div class="field">
+        <label for="sealInput">Teks segel</label>
+        <input id="sealInput" type="text" maxlength="34" value="ARUNIKA · EST. 2026" autocomplete="off" spellcheck="false">
+      </div>
+      <label class="toggle">
+        <input id="sealToggle" type="checkbox" checked>
+        <span>Tampilkan segel</span>
+      </label>
+    </section>
+
+    <section class="panel">
+      <h2>Panel / Crop</h2>
+      <div class="field">
+        <label for="panelPicker">Panel aktif</label>
+        <select id="panelPicker"></select>
+      </div>
+      <div class="field">
+        <div class="field-head">
+          <label for="zoomRange">Zoom</label>
+          <span class="readout" id="zoomRangeOut">100%</span>
+        </div>
+        <input id="zoomRange" type="range" min="100" max="300" step="1" value="100">
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <div class="field-head">
+            <label for="panXRange">Geser X</label>
+            <span class="readout" id="panXRangeOut">0</span>
+          </div>
+          <input id="panXRange" type="range" min="-100" max="100" step="1" value="0">
+        </div>
+        <div class="field">
+          <div class="field-head">
+            <label for="panYRange">Geser Y</label>
+            <span class="readout" id="panYRangeOut">0</span>
+          </div>
+          <input id="panYRange" type="range" min="-100" max="100" step="1" value="0">
+        </div>
+      </div>
+      <p class="hint">Klik panel di pratinjau untuk memilih, tarik untuk menggeser, gulir untuk zoom.</p>
+      <div id="panelLabels" class="panel-labels" aria-label="Label peran tiap panel"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Export</h2>
+      <div class="export-row">
+        <button id="export-wide" class="btn btn-primary" type="button">Export 16:9 · 1920 × 1080</button>
+        <button id="export-square" class="btn" type="button">Export 1:1 · 1080 × 1080</button>
+        <button id="export-portrait" class="btn" type="button">Export 4:5 · 1080 × 1350</button>
+      </div>
+      <p class="hint">PNG disimpan ke folder unduhan, tanpa koneksi internet.</p>
+    </section>
+  </aside>
+
+  <section class="preview" aria-label="Pratinjau cover">
+    <div class="stage">
+      <canvas id="cover" width="1920" height="1080" aria-label="Pratinjau cover Arunika"></canvas>
+    </div>
+    <p id="status" class="status" role="status" aria-live="polite">Menyiapkan editor…</p>
+  </section>
+</main>
+
+<script type="module" src="./src/main.js"></script>
+</body>
+</html>
